@@ -31,5 +31,6 @@ export default class initTabNav {
         });
       });
     }
+    return this;
   }
 }

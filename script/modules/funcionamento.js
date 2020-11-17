@@ -1,29 +1,48 @@
-export default function initFuncionamento() {
-  // Pegando horarios de funcionamento
-  const funcionamento = document.querySelector("[data-semana]");
-  const horarioFuncionamento = funcionamento.dataset.horario
-    .split(",")
-    .map(Number);
-  const diasFuncionamento = funcionamento.dataset.semana
-    .split(",")
-    .map((n) => +n);
+export default class Funcionamento {
+  constructor(funcionamentoElement) {
+    this.funcionamento = document.querySelector(funcionamentoElement);
+  }
 
-  // Pegar o horario atual do usuário
-  const dataAtual = new Date();
-  const diaUsuario = dataAtual.getDay();
-  const horarioUsuario = dataAtual.getHours();
+  horariosDeFuncionamento() {
+    const datasetParaNumero = (datasetName) => {
+      return this.funcionamento.dataset[datasetName].split(",").map(Number);
+    }
+    this.horarioFuncionamento = datasetParaNumero("horario");
+    this.diasFuncionamento = datasetParaNumero("semana");
+  }
 
-  // Verificar se o agora está aberto
-  const isOpen = {
-    weekday: diasFuncionamento.indexOf(diaUsuario) !== -1,
-    hour:
-      horarioUsuario >= horarioFuncionamento[0] &&
-      horarioUsuario < horarioFuncionamento[1],
-  };
+  horarioDeAgora() {
+    const BRAZIL_UTC = 3;
 
-  // Se agora estiver aberto, colocar classe no elemento
-  if (isOpen.hour && isOpen.weekday) {
-    funcionamento.classList.add("aberto");
-    funcionamento.setAttribute("aria-label", "Aberto agora");
+    this.dataAtual = new Date();
+    this.diaUsuario = this.dataAtual.getDay();
+    this.horarioUsuario = this.dataAtual.getUTCHours() - BRAZIL_UTC;
+  }
+
+  estaAberto() {
+    const isOpen = {
+      weekday: this.diasFuncionamento.indexOf(this.diaUsuario) !== -1,
+      hour:
+        this.horarioUsuario >= this.horarioFuncionamento[0] &&
+        this.horarioUsuario < this.horarioFuncionamento[1],
+    };
+    return isOpen.weekday && isOpen.hour;
+  }
+
+  ativarFuncionamento() {
+    if (this.estaAberto()) {
+      this.funcionamento.classList.add("aberto");
+      this.funcionamento.setAttribute("aria-label", "Aberto agora");
+    }
+  }
+
+  init() {
+    if (this.funcionamento) {
+      this.horariosDeFuncionamento();
+      this.horarioDeAgora();
+      this.estaAberto();
+      this.ativarFuncionamento();
+    }
+    return this;
   }
 }

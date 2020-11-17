@@ -1,8 +1,13 @@
+import debounce from "./debounce.js";
+
 export default class ScrollAnima {
   constructor(sections) {
     this.sections = document.querySelectorAll(sections);
     this.halfHeight = window.innerHeight * 0.6;
-    this.checkDistanceAndAnime = this.checkDistanceAndAnime.bind(this);
+    this.checkDistanceAndAnime = debounce(
+      this.checkDistanceAndAnime.bind(this),
+      200,
+    );
   }
 
   getDistance() {
@@ -15,6 +20,7 @@ export default class ScrollAnima {
   }
 
   checkDistanceAndAnime() {
+    console.log("timer");
     this.distance.forEach((item) => {
       const isSectionVisible = window.pageYOffset > item.offset;
       if (isSectionVisible) {

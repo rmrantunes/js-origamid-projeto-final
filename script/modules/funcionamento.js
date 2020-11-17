@@ -12,11 +12,14 @@ export default class Funcionamento {
   }
 
   horarioDeAgora() {
-    const BRAZIL_UTC = 3;
+    const BRAZIL_TIMEZONE = 3;
+    const convertIntoBrazilianHour = () => {
+      return this.dataAtual.getUTCHours() - BRAZIL_TIMEZONE
+    }
 
     this.dataAtual = new Date();
     this.diaUsuario = this.dataAtual.getDay();
-    this.horarioUsuario = this.dataAtual.getUTCHours() - BRAZIL_UTC;
+    this.horarioUsuario = convertIntoBrazilianHour();
   }
 
   estaAberto() {

@@ -20,7 +20,6 @@ export default class ScrollAnima {
   }
 
   checkDistanceAndAnime() {
-    console.log("timer");
     this.distance.forEach((item) => {
       const isSectionVisible = window.pageYOffset > item.offset;
       if (isSectionVisible) {

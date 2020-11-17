@@ -1,24 +1,37 @@
 import outsideClick from "./outsideClick.js";
 
-export default function initMenuMobile() {
-  const menuBtn = document.querySelector("[data-menu='button']");
-  const menuList = document.querySelector("[data-menu='list']");
-  const eventos = ["click", "touchstart"];
+export default class MenuMobile {
+  constructor(menuBtn, menuList, events) {
+    this.menuBtn = document.querySelector(menuBtn);
+    this.menuList = document.querySelector(menuList);
+    this.activeClass = "active";
+    this.openMenu = this.openMenu.bind(this);
+    if (events === undefined) this.events = ["click", "touchstart"];
+    else this.events = events;
+  }
 
-  function openMenu() {
-    menuBtn.classList.add("active");
-    menuList.classList.add("active");
-    menuBtn.setAttribute("aria-expanded", "true");
-    outsideClick(menuList, eventos, () => {
-      menuBtn.classList.remove("active");
-      menuList.classList.remove("active");
-      menuBtn.setAttribute("aria-expanded", "false");
+  openMenu() {
+    this.menuBtn.classList.add(this.activeClass);
+    this.menuList.classList.add(this.activeClass);
+    this.menuBtn.setAttribute("aria-expanded", "true");
+    outsideClick(this.menuList, this.events, () => {
+      this.menuBtn.classList.remove(this.activeClass);
+      this.menuList.classList.remove(this.activeClass);
+      this.menuBtn.setAttribute("aria-expanded", "false");
     });
   }
 
-  if (menuBtn) {
-    eventos.forEach((userEvent) => {
-      menuBtn.addEventListener(userEvent, openMenu);
+  addMenuMobileEvents() {
+    this.events.forEach((userEvent) => {
+      this.menuBtn.addEventListener(userEvent, this.openMenu);
     });
+  }
+
+  init() {
+    const thereAreMenuBtnAndList = this.menuBtn && this.menuList;
+    if (thereAreMenuBtnAndList) {
+      this.addMenuMobileEvents();
+    }
+    return this;
   }
 }

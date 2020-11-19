@@ -10,7 +10,8 @@ export default class MenuMobile {
     else this.events = events;
   }
 
-  openMenu() {
+  openMenu(event) {
+    event.preventDefault()
     this.menuBtn.classList.add(this.activeClass);
     this.menuList.classList.add(this.activeClass);
     this.menuBtn.setAttribute("aria-expanded", "true");
